@@ -1,0 +1,106 @@
+import json
+
+# Define the contact book as a list of dictionaries
+contact_book = []
+
+# Function to add a new contact to the contact book
+def add_contact():
+    name = input("Enter name: ")
+    phone_number = input("Enter phone number: ")
+    email = input("Enter email: ")
+    address = input("Enter address: ")
+
+    contact = {
+        "name": name,
+        "phone_number": phone_number,
+        "email": email,
+        "address": address,
+    }
+    contact_book.append(contact)
+    print("Contact added successfully!")
+
+# Function to view all contacts in the contact book
+def view_contacts():
+    if not contact_book:
+        print("Contact book is empty.")
+    else:
+        for idx, contact in enumerate(contact_book):
+            print(f"Contact {idx + 1}:")
+            print(f"Name: {contact['name']}")
+            print(f"Phone Number: {contact['phone_number']}")
+            print(f"Email: {contact['email']}")
+            print(f"Address: {contact['address']}")
+            print("\n")
+
+# Function to search for contacts by name or phone number
+def search_contacts():
+    query = input("Enter a name or phone number to search: ")
+    results = []
+    for contact in contact_book:
+        if query in contact["name"] or query in contact["phone_number"]:
+            results.append(contact)
+    
+    if results:
+        print("Search results:")
+        for idx, result in enumerate(results):
+            print(f"Contact {idx + 1}:")
+            print(f"Name: {result['name']}")
+            print(f"Phone Number: {result['phone_number']}")
+            print(f"Email: {result['email']}")
+            print(f"Address: {result['address']}")
+            print("\n")
+    else:
+        print("No matching contacts found.")
+
+# Function to delete a contact by name
+def delete_contact():
+    name_to_delete = input("Enter the name of the contact to delete: ")
+    for contact in contact_book:
+        if contact["name"] == name_to_delete:
+            contact_book.remove(contact)
+            print("Contact deleted successfully!")
+            return
+    print("Contact not found.")
+
+# Function to save the contact book to a JSON file
+def save_contact_book():
+    with open("contact_book.json", "w") as file:
+        json.dump(contact_book, file)
+
+# Function to load the contact book from a JSON file
+def load_contact_book():
+    try:
+        with open("contact_book.json", "r") as file:
+            global contact_book
+            contact_book = json.load(file)
+    except FileNotFoundError:
+        print("No existing contact book found.")
+
+# Load the contact book from a file if it exists
+load_contact_book()
+
+while True:
+    print("Contact Book")
+    print("1. Add Contact")
+    print("2. View Contacts")
+    print("3. Search Contacts")
+    print("4. Delete Contact")
+    print("5. Quit")
+
+    choice = input("Enter your choice: ")
+
+    if choice == "1":
+        add_contact()
+    elif choice == "2":
+        view_contacts()
+    elif choice == "3":
+        search_contacts()
+    elif choice == "4":
+        delete_contact()
+    elif choice == "5":
+        save_contact_book()
+        print("Exiting the contact book. Goodbye!")
+        break
+    else:
+        print("Invalid choice. Please choose a valid option.")
+
